@@ -1,0 +1,9 @@
+{
+  "name": "game-gallery-api",
+  "version": "1.0.0",
+  "description": "API untuk Game Gallery (dipakai oleh sansserif.cloud index.html)",
+  "main": "api/[provider].js",
+  "scripts": {
+    "start": "vercel dev"
+  }
+}

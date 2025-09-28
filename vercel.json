@@ -1,0 +1,7 @@
+{
+  "version": 2,
+  "rewrites": [
+    { "source": "/api/:provider", "destination": "/api/[provider].js?provider=:provider" },
+    { "source": "/api/:provider/stats/summary", "destination": "/api/[provider].js?provider=:provider&stats=summary" }
+  ]
+}
