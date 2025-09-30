@@ -1,6 +1,14 @@
 const fetch = require('node-fetch');
 
 module.exports = async function handler(req, res) {
+  // === CORS headers ===
+  res.setHeader('Access-Control-Allow-Origin', '*'); // izinkan semua origin
+  res.setHeader('Access-Control-Allow-Methods', 'GET,OPTIONS');
+  res.setHeader('Access-Control-Allow-Headers', 'Content-Type');
+
+  // Tangani preflight request
+  if (req.method === 'OPTIONS') return res.status(200).end();
+
   try {
     const { provider } = req.query;
     if (!provider) return res.status(400).json({ error: 'Provider not specified' });
