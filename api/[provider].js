@@ -1,3 +1,18 @@
+import fs from 'fs';
+import path from 'path';
+
+export default async function handler(req, res) {
+  // ====== CORS ======
+  res.setHeader('Access-Control-Allow-Origin', 'https://sansserif.cloud');
+  res.setHeader('Access-Control-Allow-Methods', 'GET,OPTIONS');
+  res.setHeader('Access-Control-Allow-Headers', 'Content-Type');
+
+  if (req.method === 'OPTIONS') {
+    return res.status(200).end();
+  }
+
+  const { provider, stats } = req.query;
+
 // Daftar provider dan jumlah game (bisa disesuaikan sesuai jumlah file gambar di sansserif.cloud)
 const providers = {
   "pragmatic-play": { name: "Pragmatic Play", count: 5 },
