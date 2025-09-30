@@ -24,6 +24,10 @@
       "dest": "/api/$1.js"
     },
     {
+      "src": "/images/(.*)",
+      "dest": "/public/images/$1"
+    },
+    {
       "src": "/(.*)",
       "dest": "/index.html"
     }
