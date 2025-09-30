@@ -1,7 +1,6 @@
 {
-  "version": 2,
-  "rewrites": [
-    { "source": "/api/:provider", "destination": "/api/[provider].js?provider=:provider" },
-    { "source": "/api/:provider/stats/summary", "destination": "/api/[provider].js?provider=:provider&stats=summary" }
+  "version": 3,
+  "routes": [
+    { "src": "/api/(.*)", "dest": "/api/$1.js" }
   ]
 }
