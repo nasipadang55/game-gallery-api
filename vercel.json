@@ -6,6 +6,6 @@
   ],
   "routes": [
     { "src": "/api/(.*)", "dest": "/api/allProviders.js" },
-    { "src": "/(.*)", "dest": "/index.html" }
+    { "src": "/(.*)", "dest": "/public/index.html" }
   ]
 }
