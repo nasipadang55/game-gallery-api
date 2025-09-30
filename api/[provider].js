@@ -14,7 +14,7 @@ const providers = {
   "playstar": { name: "PlayStar", count: 5 },
   "live22": { name: "Live22", count: 5 },
   "cq9": { name: "CQ9", count: 5 },
-  "sboslot": { name: "SBO Slot", count: 5 },
+  "sboslot": { name: "1", count: 5 },
   "5g": { name: "5G", count: 5 }
 };
 
