@@ -9,7 +9,7 @@ module.exports = (req, res) => {
     const data = files.map(file => ({
       id: path.parse(file).name,
       title: path.parse(file).name,
-      imageUrl: `/api/images/5g/${file}`
+      imageUrl: `/images/5g/${file}`
     }));
 
     res.setHeader('Access-Control-Allow-Origin', '*');
