@@ -1,20 +1,20 @@
-const fetch = require('node-fetch');
+import fs from 'fs';
+import path from 'path';
 
-module.exports = async function handler(req, res) {
+export default async function handler(req, res) {
   // === CORS headers ===
   res.setHeader('Access-Control-Allow-Origin', '*');
   res.setHeader('Access-Control-Allow-Methods', 'GET,OPTIONS');
   res.setHeader('Access-Control-Allow-Headers', 'Content-Type');
 
-  // Tangani preflight request
   if (req.method === 'OPTIONS') return res.status(200).end();
 
   try {
-    // Ambil provider dari query atau dari URL params
-    const provider = req.query.provider || req.query['provider'] || req.params?.provider;
+    // Ambil provider dari query params
+    const provider = req.query.provider;
     if (!provider) return res.status(400).json({ error: 'Provider not specified' });
 
-    // Daftar valid provider
+    // Daftar provider valid
     const validProviders = [
       'pragmatic', 'pgsoft', 'habanero', 'jili',
       'spadegaming', 'jokergaming', 'microgaming', 'hacksaw',
@@ -22,33 +22,38 @@ module.exports = async function handler(req, res) {
       'live22', 'cq9', 'sboslot', '5g'
     ];
 
-    if (!validProviders.includes(provider)) {
-      return res.status(404).json({ error: 'Provider not found' });
-    }
+    if (!validProviders.includes(provider)) return res.status(404).json({ error: 'Provider not found' });
 
-    // URL index.json di Namecheap
-    const baseUrl = `https://game-gallery-api.vercel.app/image/${provider}/`;
-    const jsonUrl = `${baseUrl}index.json`;
+    // Path folder gambar di public
+    const imagesFolder = path.join(process.cwd(), 'public', 'image', provider);
 
-    // Fetch file JSON
-    const response = await fetch(jsonUrl);
-    if (!response.ok) throw new Error(`Failed to fetch provider JSON: ${response.status}`);
+    if (!fs.existsSync(imagesFolder)) return res.status(404).json({ error: 'Images folder not found' });
 
-    const images = await response.json();
+    // Ambil semua file gambar
+    const files = fs.readdirSync(imagesFolder).filter(file => /\.(png|jpg|jpeg|gif|webp)$/i.test(file));
 
-    // Map ke format konsisten
-    const games = images.map(img => ({
-      id: img.id || (img.title ? img.title.toLowerCase().replace(/\s+/g, '-') : ''),
-      title: img.title || 'No Title',
-      imageUrl: img.imageUrl.startsWith('http') ? img.imageUrl : `${baseUrl}${img.imageUrl}`,
+    // Buat array game
+    const games = files.map((file, index) => ({
+      id: `${provider}-${index + 1}`,
+      title: `${provider.toUpperCase()} Game ${index + 1}`,
+      imageUrl: `/image/${provider}/${file}`, // langsung dari public folder
       provider,
-      providerName: img.providerName || provider
+      providerName: provider
     }));
 
+    // Jika query /stats/summary, kembalikan stats
+    if (req.url.includes('/stats/summary')) {
+      return res.status(200).json({
+        provider,
+        totalGames: games.length
+      });
+    }
+
+    // Kembalikan array games
     res.status(200).json(games);
 
   } catch (error) {
     console.error(error);
     res.status(500).json({ error: 'Unable to fetch provider images' });
   }
-};
+}
