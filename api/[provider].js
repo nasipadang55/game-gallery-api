@@ -1,6 +1,7 @@
 import fs from 'fs';
 import path from 'path';
 
+// Handler utama
 export default async function handler(req, res) {
   // === CORS headers ===
   res.setHeader('Access-Control-Allow-Origin', '*');
@@ -10,11 +11,8 @@ export default async function handler(req, res) {
   if (req.method === 'OPTIONS') return res.status(200).end();
 
   try {
-    // Ambil provider dari query params
-    const provider = req.query.provider;
-    if (!provider) return res.status(400).json({ error: 'Provider not specified' });
+    const { provider, filename } = req.query;
 
-    // Daftar provider valid
     const validProviders = [
       'pragmatic', 'pgsoft', 'habanero', 'jili',
       'spadegaming', 'jokergaming', 'microgaming', 'hacksaw',
@@ -22,26 +20,45 @@ export default async function handler(req, res) {
       'live22', 'cq9', 'sboslot', '5g'
     ];
 
-    if (!validProviders.includes(provider)) return res.status(404).json({ error: 'Provider not found' });
+    if (!provider || !validProviders.includes(provider)) {
+      return res.status(404).json({ error: 'Provider not found' });
+    }
 
-    // Path folder gambar di public
-    const imagesFolder = path.join(process.cwd(), 'public', 'image', provider);
+    const imagesFolder = path.join(process.cwd(), 'image', provider);
 
     if (!fs.existsSync(imagesFolder)) return res.status(404).json({ error: 'Images folder not found' });
 
-    // Ambil semua file gambar
-    const files = fs.readdirSync(imagesFolder).filter(file => /\.(png|jpg|jpeg|gif|webp)$/i.test(file));
+    // Jika ada filename → kirim file gambar
+    if (filename) {
+      const filePath = path.join(imagesFolder, filename);
 
-    // Buat array game
+      if (!fs.existsSync(filePath)) return res.status(404).json({ error: 'File not found' });
+
+      const ext = path.extname(filePath).toLowerCase();
+      const mimeTypes = {
+        '.png': 'image/png',
+        '.jpg': 'image/jpeg',
+        '.jpeg': 'image/jpeg',
+        '.gif': 'image/gif',
+        '.webp': 'image/webp'
+      };
+      res.setHeader('Content-Type', mimeTypes[ext] || 'application/octet-stream');
+      const fileBuffer = fs.readFileSync(filePath);
+      return res.status(200).send(fileBuffer);
+    }
+
+    // Jika tidak ada filename → kirim JSON daftar games
+    const files = fs.readdirSync(imagesFolder).filter(f => /\.(png|jpg|jpeg|gif|webp)$/i.test(f));
+
     const games = files.map((file, index) => ({
       id: `${provider}-${index + 1}`,
       title: `${provider.toUpperCase()} Game ${index + 1}`,
-      imageUrl: `/image/${provider}/${file}`, // langsung dari public folder
+      imageUrl: `/api/${provider}/image/${file}`, // URL API untuk gambar
       provider,
       providerName: provider
     }));
 
-    // Jika query /stats/summary, kembalikan stats
+    // Jika query stats/summary
     if (req.url.includes('/stats/summary')) {
       return res.status(200).json({
         provider,
@@ -49,7 +66,6 @@ export default async function handler(req, res) {
       });
     }
 
-    // Kembalikan array games
     res.status(200).json(games);
 
   } catch (error) {
