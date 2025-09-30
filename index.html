@@ -1,1 +1,932 @@
 
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Game Image Gallery - All Providers</title>
+    <style>
+        :root {
+            --primary-color: #3498db;
+            --secondary-color: #2980b9;
+            --accent-color: #e74c3c;
+            --light-color: #ecf0f1;
+            --dark-color: #2c3e50;
+            --success-color: #2ecc71;
+            --warning-color: #f39c12;
+            --danger-color: #e74c3c;
+            --gray-color: #95a5a6;
+        }
+        
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+        }
+        
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            line-height: 1.6;
+            color: #333;
+            background-color: #f8f9fa;
+        }
+        
+        .container {
+            max-width: 1400px;
+            margin: 0 auto;
+            padding: 20px;
+        }
+        
+        header {
+            background-color: var(--dark-color);
+            color: white;
+            padding: 30px 0;
+            text-align: center;
+            margin-bottom: 30px;
+        }
+        
+        h1 {
+            font-size: 2.5rem;
+            margin-bottom: 10px;
+        }
+        
+        .subtitle {
+            font-size: 1.2rem;
+            opacity: 0.8;
+        }
+        
+        .header-links {
+            display: flex;
+            justify-content: center;
+            margin-top: 20px;
+            gap: 20px;
+        }
+        
+        .header-links a {
+            color: white;
+            text-decoration: none;
+            padding: 8px 15px;
+            border-radius: 4px;
+            transition: background-color 0.3s;
+        }
+        
+        .header-links a:hover {
+            background-color: rgba(255, 255, 255, 0.1);
+        }
+        
+        .header-links a.active {
+            background-color: rgba(255, 255, 255, 0.2);
+            font-weight: bold;
+        }
+        
+        .main-content {
+            display: flex;
+            gap: 30px;
+        }
+        
+        .sidebar {
+            width: 300px;
+            flex-shrink: 0;
+        }
+        
+        .gallery-container {
+            flex-grow: 1;
+        }
+        
+        .search-container {
+            background-color: white;
+            padding: 20px;
+            border-radius: 8px;
+            box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+            margin-bottom: 20px;
+        }
+        
+        .search-title {
+            font-size: 1.2rem;
+            margin-bottom: 15px;
+            color: var(--dark-color);
+        }
+        
+        .search-box {
+            display: flex;
+            width: 100%;
+            margin-bottom: 15px;
+        }
+        
+        .search-input {
+            flex-grow: 1;
+            padding: 10px 15px;
+            border: 1px solid #ddd;
+            border-radius: 4px 0 0 4px;
+            font-size: 16px;
+            outline: none;
+        }
+        
+        .search-button {
+            background-color: var(--primary-color);
+            color: white;
+            border: none;
+            padding: 0 20px;
+            border-radius: 0 4px 4px 0;
+            cursor: pointer;
+            font-size: 16px;
+            transition: background-color 0.3s;
+        }
+        
+        .search-button:hover {
+            background-color: var(--secondary-color);
+        }
+        
+        .filter-section {
+            margin-top: 15px;
+        }
+        
+        .filter-title {
+            font-weight: bold;
+            margin-bottom: 10px;
+            color: var(--dark-color);
+        }
+        
+        .provider-list {
+            max-height: 300px;
+            overflow-y: auto;
+            border: 1px solid #ddd;
+            border-radius: 4px;
+            padding: 10px;
+        }
+        
+        .provider-item {
+            display: flex;
+            align-items: center;
+            margin-bottom: 8px;
+        }
+        
+        .provider-checkbox {
+            margin-right: 10px;
+        }
+        
+        .provider-label {
+            flex-grow: 1;
+            cursor: pointer;
+        }
+        
+        .provider-count {
+            background-color: var(--light-color);
+            padding: 2px 8px;
+            border-radius: 10px;
+            font-size: 12px;
+            color: var(--dark-color);
+        }
+        
+        .stats-container {
+            background-color: white;
+            padding: 20px;
+            border-radius: 8px;
+            box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+        }
+        
+        .stats-title {
+            font-size: 1.2rem;
+            margin-bottom: 15px;
+            color: var(--dark-color);
+        }
+        
+        .stats-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(130px, 1fr));
+            gap: 15px;
+        }
+        
+        .stat-card {
+            background-color: var(--light-color);
+            padding: 15px;
+            border-radius: 8px;
+            text-align: center;
+            transition: transform 0.3s;
+        }
+        
+        .stat-card:hover {
+            transform: translateY(-5px);
+        }
+        
+        .stat-value {
+            font-size: 1.8rem;
+            font-weight: bold;
+            color: var(--primary-color);
+            margin-bottom: 5px;
+        }
+        
+        .stat-label {
+            font-size: 0.9rem;
+            color: var(--gray-color);
+        }
+        
+        .gallery-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 20px;
+        }
+        
+        .gallery-title {
+            font-size: 1.5rem;
+            color: var(--dark-color);
+        }
+        
+        .sort-container {
+            display: flex;
+            align-items: center;
+        }
+        
+        .sort-label {
+            margin-right: 10px;
+            color: var(--gray-color);
+        }
+        
+        .sort-select {
+            padding: 8px 15px;
+            border: 1px solid #ddd;
+            border-radius: 4px;
+            background-color: white;
+            cursor: pointer;
+        }
+        
+        .gallery-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(250px, 1fr));
+            gap: 20px;
+        }
+        
+        .game-card {
+            background-color: white;
+            border-radius: 8px;
+            overflow: hidden;
+            box-shadow: 0 3px 10px rgba(0, 0, 0, 0.1);
+            transition: transform 0.3s;
+        }
+        
+        .game-card:hover {
+            transform: translateY(-5px);
+        }
+        
+        .game-image {
+            width: 100%;
+            object-fit: cover;
+            border-bottom: 1px solid #eee;
+        }
+        
+        .game-info {
+            padding: 15px;
+        }
+        
+        .game-provider {
+            display: inline-block;
+            background-color: var(--primary-color);
+            color: white;
+            padding: 3px 8px;
+            border-radius: 12px;
+            font-size: 12px;
+            margin-bottom: 8px;
+        }
+        
+        .game-title {
+            font-size: 1.1rem;
+            margin-bottom: 5px;
+            color: var(--dark-color);
+        }
+        
+        .game-id {
+            font-size: 0.8rem;
+            color: var(--gray-color);
+        }
+        
+        .pagination {
+            display: flex;
+            justify-content: center;
+            margin-top: 30px;
+            gap: 5px;
+        }
+        
+        .pagination-button {
+            background-color: white;
+            border: 1px solid #ddd;
+            padding: 8px 15px;
+            border-radius: 4px;
+            cursor: pointer;
+            transition: all 0.3s;
+        }
+        
+        .pagination-button:hover {
+            background-color: var(--light-color);
+        }
+        
+        .pagination-button.active {
+            background-color: var(--primary-color);
+            color: white;
+            border-color: var(--primary-color);
+        }
+        
+        .pagination-button:disabled {
+            opacity: 0.5;
+            cursor: not-allowed;
+        }
+        
+        .loading {
+            text-align: center;
+            padding: 50px;
+            font-size: 1.2rem;
+            color: var(--gray-color);
+        }
+        
+        .no-results {
+            text-align: center;
+            padding: 50px;
+            font-size: 1.2rem;
+            color: var(--gray-color);
+        }
+        
+        .error-message {
+            background-color: #feeaea;
+            color: var(--danger-color);
+            padding: 15px;
+            border-radius: 8px;
+            margin-bottom: 20px;
+            text-align: center;
+        }
+        
+        .total-games {
+            background-color: var(--light-color);
+            padding: 10px 15px;
+            border-radius: 8px;
+            margin-bottom: 20px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+        
+        .total-count {
+            font-weight: bold;
+            color: var(--primary-color);
+        }
+        
+        .clear-filters {
+            background-color: transparent;
+            border: none;
+            color: var(--primary-color);
+            cursor: pointer;
+            font-size: 0.9rem;
+            text-decoration: underline;
+        }
+        
+        .clear-filters:hover {
+            color: var(--secondary-color);
+        }
+        
+        @media (max-width: 1200px) {
+            .main-content {
+                flex-direction: column;
+            }
+            
+            .sidebar {
+                width: 100%;
+            }
+        }
+        
+        @media (max-width: 768px) {
+            .gallery-grid {
+                grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
+            }
+        }
+        
+        @media (max-width: 480px) {
+            .gallery-grid {
+                grid-template-columns: 1fr;
+            }
+            
+            .stats-grid {
+                grid-template-columns: repeat(2, 1fr);
+            }
+        }
+    </style>
+</head>
+<body>
+    <header>
+        <div class="container">
+            <h1>Game Image Gallery</h1>
+            <p class="subtitle">Browse and search games from all providers</p>
+        </div>
+    </header>
+    
+    <div class="container">
+        <div id="error-container" class="error-message" style="display: none;">
+            API server is not running. Please start the Node.js server on port 5000 to view the gallery.
+        </div>
+        
+        <div class="main-content">
+            <div class="sidebar">
+                <div class="search-container">
+                    <h2 class="search-title">Search & Filter</h2>
+                    <div class="search-box">
+                        <input type="text" id="search-input" class="search-input" placeholder="Search games...">
+                        <button id="search-button" class="search-button">Search</button>
+                    </div>
+                    
+                    <div class="filter-section">
+                        <h3 class="filter-title">Game Providers</h3>
+                        <div id="provider-list" class="provider-list">
+                            <div class="loading">Loading providers...</div>
+                        </div>
+                    </div>
+                </div>
+                
+                <div class="stats-container">
+                    <h2 class="stats-title">Statistics</h2>
+                    <div id="stats-grid" class="stats-grid">
+                        <div class="loading">Loading stats...</div>
+                    </div>
+                </div>
+            </div>
+            
+            <div class="gallery-container">
+                <div class="gallery-header">
+                    <h2 class="gallery-title">All Games</h2>
+                    <div class="sort-container">
+                        <span class="sort-label">Sort by:</span>
+                        <select id="sort-select" class="sort-select">
+                            <option value="title-asc">Title (A-Z)</option>
+                            <option value="title-desc">Title (Z-A)</option>
+                            <option value="provider-asc">Provider (A-Z)</option>
+                            <option value="provider-desc">Provider (Z-A)</option>
+                        </select>
+                    </div>
+                </div>
+                
+                <div id="total-games" class="total-games" style="display: none;">
+                    <span id="total-count" class="total-count">0 games found</span>
+                    <button id="clear-filters" class="clear-filters">Clear all filters</button>
+                </div>
+                
+                <div id="gallery-grid" class="gallery-grid">
+                    <div class="loading">Loading games...</div>
+                </div>
+                
+                <div id="pagination" class="pagination"></div>
+            </div>
+        </div>
+    </div>
+    
+    <script>
+        // API base URL
+        const API_BASE_URL = "https://game-gallery-api.vercel.app";
+        
+        // DOM elements
+        const searchInput = document.getElementById('search-input');
+        const searchButton = document.getElementById('search-button');
+        const providerListEl = document.getElementById('provider-list');
+        const statsGridEl = document.getElementById('stats-grid');
+        const galleryGridEl = document.getElementById('gallery-grid');
+        const paginationEl = document.getElementById('pagination');
+        const sortSelectEl = document.getElementById('sort-select');
+        const errorContainerEl = document.getElementById('error-container');
+        const totalGamesEl = document.getElementById('total-games');
+        const totalCountEl = document.getElementById('total-count');
+        const clearFiltersEl = document.getElementById('clear-filters');
+        
+        // State variables
+        let allGames = [];
+        let filteredGames = [];
+        let providers = [];
+        let providerStats = {};
+        let selectedProviders = [];
+        let currentPage = 1;
+        const ITEMS_PER_PAGE = 20;
+        let currentSort = 'title-asc';
+        let searchQuery = '';
+        
+        // Initialize the gallery
+        async function initGallery() {
+            try {
+                // Load providers and their stats
+                await loadProviders();
+                
+                // Load all games
+                await loadAllGames();
+                
+                // Set up event listeners
+                setupEventListeners();
+            } catch (error) {
+                console.error('Error initializing gallery:', error);
+                errorContainerEl.style.display = 'block';
+            }
+        }
+        
+        // Load providers and their stats
+        async function loadProviders() {
+            try {
+                // Define all providers
+                providers = [
+                    { id: 'pragmatic', name: 'Pragmatic Play', endpoint: 'pragmatic' },
+                    { id: 'pgsoft', name: 'PG Soft', endpoint: 'pgsoft' },
+                    { id: 'habanero', name: 'Habanero', endpoint: 'habanero' },
+                    { id: 'jili', name: 'JILI', endpoint: 'jili' },
+                    { id: 'spadegaming', name: 'Spadegaming', endpoint: 'spadegaming' },
+                    { id: 'jokergaming', name: 'Joker Gaming', endpoint: 'jokergaming' },
+                    { id: 'microgaming', name: 'Microgaming', endpoint: 'microgaming' },
+                    { id: 'hacksaw', name: 'Hacksaw Gaming', endpoint: 'hacksaw' },
+                    { id: 'fastspin', name: 'FastSpin', endpoint: 'fastspin' },
+                    { id: 'nolimitcity', name: 'Nolimit City', endpoint: 'nolimitcity' },
+                    { id: 'advantplay', name: 'Advantplay', endpoint: 'advantplay' },
+                    { id: 'playstar', name: 'PlayStar', endpoint: 'playstar' },
+                    { id: 'live22', name: 'Live22', endpoint: 'live22' },
+                    { id: 'cq9', name: 'CQ9', endpoint: 'cq9' },
+                    { id: 'sboslot', name: 'SBO Slot', endpoint: 'sboslot' },
+                    { id: '5g', name: '5G', endpoint: '5g' }
+                ];
+                
+                // Fetch stats for each provider
+                const statsPromises = providers.map(provider => 
+                    fetch(`${API_BASE_URL}/api/${provider.endpoint}/stats/summary`)
+                        .then(response => {
+                            if (!response.ok) {
+                                throw new Error(`Failed to fetch stats for ${provider.name}`);
+                            }
+                            return response.json();
+                        })
+                        .then(data => {
+                            providerStats[provider.id] = data;
+                            return { provider: provider.id, stats: data };
+                        })
+                        .catch(error => {
+                            console.error(error);
+                            return { provider: provider.id, stats: { totalGames: 0 } };
+                        })
+                );
+                
+                await Promise.all(statsPromises);
+                
+                // Render provider list
+                renderProviderList();
+                
+                // Render stats grid
+                renderStatsGrid();
+            } catch (error) {
+                console.error('Error loading providers:', error);
+                throw error;
+            }
+        }
+        
+        // Render provider list with checkboxes
+        function renderProviderList() {
+            let html = '';
+            
+            providers.forEach(provider => {
+                const totalGames = providerStats[provider.id]?.totalGames || 0;
+                
+                html += `
+                    <div class="provider-item">
+                        <input type="checkbox" id="provider-${provider.id}" class="provider-checkbox" 
+                               data-provider="${provider.id}" ${selectedProviders.includes(provider.id) ? 'checked' : ''}>
+                        <label for="provider-${provider.id}" class="provider-label">${provider.name}</label>
+                        <span class="provider-count">${totalGames}</span>
+                    </div>
+                `;
+            });
+            
+            providerListEl.innerHTML = html;
+            
+            // Add event listeners to checkboxes
+            document.querySelectorAll('.provider-checkbox').forEach(checkbox => {
+                checkbox.addEventListener('change', handleProviderFilter);
+            });
+        }
+        
+        // Render stats grid
+        function renderStatsGrid() {
+            let html = '';
+            
+            // Total games across all providers
+            const totalGames = Object.values(providerStats).reduce((total, stats) => total + (stats.totalGames || 0), 0);
+            
+            html += `
+                <div class="stat-card">
+                    <div class="stat-value">${totalGames}</div>
+                    <div class="stat-label">Total Games</div>
+                </div>
+                
+                <div class="stat-card">
+                    <div class="stat-value">${providers.length}</div>
+                    <div class="stat-label">Providers</div>
+                </div>
+            `;
+            
+            // Top 4 providers by game count
+            const topProviders = [...providers]
+                .sort((a, b) => (providerStats[b.id]?.totalGames || 0) - (providerStats[a.id]?.totalGames || 0))
+                .slice(0, 4);
+            
+            topProviders.forEach(provider => {
+                const totalGames = providerStats[provider.id]?.totalGames || 0;
+                
+                html += `
+                    <div class="stat-card">
+                        <div class="stat-value">${totalGames}</div>
+                        <div class="stat-label">${provider.name}</div>
+                    </div>
+                `;
+            });
+            
+            statsGridEl.innerHTML = html;
+        }
+        
+        // Load all games from all providers
+        async function loadAllGames() {
+            try {
+                galleryGridEl.innerHTML = '<div class="loading">Loading games...</div>';
+                
+                const gamePromises = providers.map(provider => 
+                    fetch(`${API_BASE_URL}/api/${provider.endpoint}`)
+                        .then(response => {
+                            if (!response.ok) {
+                                throw new Error(`Failed to fetch games for ${provider.name}`);
+                            }
+                            return response.json();
+                        })
+                        .then(data => {
+                            // Handle different API response structures
+                            let gamesArray = [];
+                            
+                            // Case 1: Direct array of games (preferred format)
+                            if (Array.isArray(data)) {
+                                console.log(`API for ${provider.name} returned a direct array of games`);
+                                gamesArray = data;
+                            } 
+                            // Case 2: Object with 'images' array (legacy format for Pragmatic Play, PG Soft)
+                            else if (data && data.images && Array.isArray(data.images)) {
+                                console.log(`API for ${provider.name} returned {provider, images} structure - consider updating to direct array`);
+                                gamesArray = data.images;
+                            } 
+                            // Case 3: Object with 'games' array (legacy format for some providers)
+                            else if (data && data.games && Array.isArray(data.games)) {
+                                console.log(`API for ${provider.name} returned {provider, games} structure - consider updating to direct array`);
+                                gamesArray = data.games;
+                            }
+                            // If none of the above, log error
+                            else {
+                                console.error(`API for ${provider.name} did not return a usable data structure:`, data);
+                                return []; // Return empty array if not a usable structure
+                            }
+                            
+                            // Log the number of games found for debugging
+                            console.log(`Found ${gamesArray.length} games for ${provider.name}`);
+                            
+                            // Map games to a consistent structure
+                            return gamesArray.map(game => {
+                                // Ensure each game has id, title, and imageUrl properties
+                                const gameObj = {
+                                    id: game.id || '',
+                                    title: game.title || '',
+                                    imageUrl: game.imageUrl || '',
+                                    provider: provider.id,
+                                    providerName: provider.name
+                                };
+                                return gameObj;
+                            });
+                        })
+                        .catch(error => {
+                            console.error(`Error fetching ${provider.name} games:`, error);
+                            return [];
+                        })
+                );
+                
+                const gamesArrays = await Promise.all(gamePromises);
+                allGames = gamesArrays.flat();
+                
+                // Initial filtering and sorting
+                filterAndSortGames();
+            } catch (error) {
+                console.error('Error loading games:', error);
+                galleryGridEl.innerHTML = '<div class="no-results">Error loading games. Please ensure the API server is running.</div>';
+                errorContainerEl.style.display = 'block';
+            }
+        }
+        
+        // Filter and sort games based on current state
+        function filterAndSortGames() {
+            // Apply provider filter
+            let result = allGames;
+            
+            if (selectedProviders.length > 0) {
+                result = result.filter(game => selectedProviders.includes(game.provider));
+            }
+            
+            // Apply search filter
+            if (searchQuery) {
+                const query = searchQuery.toLowerCase();
+                result = result.filter(game => 
+                    game.title.toLowerCase().includes(query) || 
+                    game.id.toLowerCase().includes(query)
+                );
+            }
+            
+            // Apply sorting
+            switch (currentSort) {
+                case 'title-asc':
+                    result.sort((a, b) => a.title.localeCompare(b.title));
+                    break;
+                case 'title-desc':
+                    result.sort((a, b) => b.title.localeCompare(a.title));
+                    break;
+                case 'provider-asc':
+                    result.sort((a, b) => a.providerName.localeCompare(b.providerName) || a.title.localeCompare(b.title));
+                    break;
+                case 'provider-desc':
+                    result.sort((a, b) => b.providerName.localeCompare(a.providerName) || a.title.localeCompare(b.title));
+                    break;
+            }
+            
+            filteredGames = result;
+            
+            // Update total count
+            totalCountEl.textContent = `${filteredGames.length} games found`;
+            totalGamesEl.style.display = 'flex';
+            
+            // Reset to first page
+            currentPage = 1;
+            
+            // Render gallery and pagination
+            renderGallery();
+            renderPagination();
+        }
+        
+        // Render gallery with current page of games
+        function renderGallery() {
+            const startIndex = (currentPage - 1) * ITEMS_PER_PAGE;
+            const endIndex = startIndex + ITEMS_PER_PAGE;
+            const pageGames = filteredGames.slice(startIndex, endIndex);
+            
+            if (pageGames.length === 0) {
+                galleryGridEl.innerHTML = '<div class="no-results">No games found matching your criteria.</div>';
+                return;
+            }
+            
+            let html = '';
+            
+            pageGames.forEach(game => {
+                // Construct the full image URL
+                const imageUrl = game.imageUrl.startsWith('http') 
+                    ? game.imageUrl 
+                    : `${API_BASE_URL}${game.imageUrl}`;
+                
+                html += `
+                    <div class="game-card">
+                        <img src="${imageUrl}" alt="${game.title}" class="game-image" 
+                             onerror="this.src='https://placehold.co/300x200?text=Image+Not+Found'">
+                        <div class="game-info">
+                            <span class="game-provider">${game.providerName}</span>
+                            <h3 class="game-title">${game.title}</h3>
+                            <div class="game-id">ID: ${game.id}</div>
+                        </div>
+                    </div>
+                `;
+            });
+            
+            galleryGridEl.innerHTML = html;
+        }
+        
+        // Render pagination controls
+        function renderPagination() {
+            const totalPages = Math.ceil(filteredGames.length / ITEMS_PER_PAGE);
+            
+            if (totalPages <= 1) {
+                paginationEl.innerHTML = '';
+                return;
+            }
+            
+            let html = '';
+            
+            // Previous button
+            html += `<button class="pagination-button" id="prev-page" ${currentPage === 1 ? 'disabled' : ''}>Previous</button>`;
+            
+            // Page numbers
+            const maxVisiblePages = 5;
+            let startPage = Math.max(1, currentPage - Math.floor(maxVisiblePages / 2));
+            let endPage = Math.min(totalPages, startPage + maxVisiblePages - 1);
+            
+            if (endPage - startPage + 1 < maxVisiblePages) {
+                startPage = Math.max(1, endPage - maxVisiblePages + 1);
+            }
+            
+            for (let i = startPage; i <= endPage; i++) {
+                html += `<button class="pagination-button ${i === currentPage ? 'active' : ''}" data-page="${i}">${i}</button>`;
+            }
+            
+            // Next button
+            html += `<button class="pagination-button" id="next-page" ${currentPage === totalPages ? 'disabled' : ''}>Next</button>`;
+            
+            paginationEl.innerHTML = html;
+            
+            // Add event listeners to pagination buttons
+            document.querySelectorAll('.pagination-button[data-page]').forEach(button => {
+                button.addEventListener('click', () => {
+                    currentPage = parseInt(button.dataset.page);
+                    renderGallery();
+                    renderPagination();
+                    // Scroll to top of gallery
+                    galleryGridEl.scrollIntoView({ behavior: 'smooth' });
+                });
+            });
+            
+            const prevButton = document.getElementById('prev-page');
+            if (prevButton) {
+                prevButton.addEventListener('click', () => {
+                    if (currentPage > 1) {
+                        currentPage--;
+                        renderGallery();
+                        renderPagination();
+                        galleryGridEl.scrollIntoView({ behavior: 'smooth' });
+                    }
+                });
+            }
+            
+            const nextButton = document.getElementById('next-page');
+            if (nextButton) {
+                nextButton.addEventListener('click', () => {
+                    if (currentPage < totalPages) {
+                        currentPage++;
+                        renderGallery();
+                        renderPagination();
+                        galleryGridEl.scrollIntoView({ behavior: 'smooth' });
+                    }
+                });
+            }
+        }
+        
+        // Handle provider filter changes
+        function handleProviderFilter(event) {
+            const providerId = event.target.dataset.provider;
+            
+            if (event.target.checked) {
+                if (!selectedProviders.includes(providerId)) {
+                    selectedProviders.push(providerId);
+                }
+            } else {
+                selectedProviders = selectedProviders.filter(id => id !== providerId);
+            }
+            
+            filterAndSortGames();
+        }
+        
+        // Handle search
+        function handleSearch() {
+            searchQuery = searchInput.value.trim();
+            filterAndSortGames();
+        }
+        
+        // Handle sort changes
+        function handleSort() {
+            currentSort = sortSelectEl.value;
+            filterAndSortGames();
+        }
+        
+        // Clear all filters
+        function clearFilters() {
+            // Clear search
+            searchInput.value = '';
+            searchQuery = '';
+            
+            // Clear provider filters
+            selectedProviders = [];
+            document.querySelectorAll('.provider-checkbox').forEach(checkbox => {
+                checkbox.checked = false;
+            });
+            
+            // Reset sort
+            sortSelectEl.value = 'title-asc';
+            currentSort = 'title-asc';
+            
+            // Apply filters
+            filterAndSortGames();
+        }
+        
+        // Set up event listeners
+        function setupEventListeners() {
+            // Search
+            searchButton.addEventListener('click', handleSearch);
+            searchInput.addEventListener('keyup', (e) => {
+                if (e.key === 'Enter') {
+                    handleSearch();
+                }
+            });
+            
+            // Sort
+            sortSelectEl.addEventListener('change', handleSort);
+            
+            // Clear filters
+            clearFiltersEl.addEventListener('click', clearFilters);
+        }
+        
+        // Initialize the gallery when the page loads
+        window.addEventListener('DOMContentLoaded', initGallery);
+    </script>
+</body>
+</html>
