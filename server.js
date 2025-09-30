@@ -1,53 +1,26 @@
 const express = require('express');
-const fs = require('fs');
+const cors = require('cors');
 const path = require('path');
-const router = express.Router();
 
-const imagesBase = path.join(__dirname, '../images');
+const app = express();
+const port = process.env.PORT || 5000;
 
-// Mapping folder -> provider name
-const providerMap = {
-  pragmatic: 'Pragmatic Play',
-  pgsoft: 'PG Soft',
-  habanero: 'Habanero',
-  spadegaming: 'Spadegaming'
-};
+// Middleware
+app.use(cors());
+app.use(express.json());
 
-// GET all games across providers
-router.get('/', (req, res) => {
-  const allGames = [];
+// Serve images folder
+app.use('/images', express.static(path.join(__dirname, 'images')));
 
-  Object.keys(providerMap).forEach(providerId => {
-    const folderPath = path.join(imagesBase, providerId);
-    if (!fs.existsSync(folderPath)) return;
+// API route
+const allProviders = require('./api/allProviders');
+app.use('/api', allProviders);
 
-    const files = fs.readdirSync(folderPath).filter(f => /\.(png|jpg|jpeg|gif)$/i.test(f));
-
-    files.forEach((file, index) => {
-      allGames.push({
-        id: `${providerId}${index+1}`,
-        title: file.replace(/\.(png|jpg|jpeg|gif)$/i, '').replace(/[-_]/g, ' '),
-        imageUrl: `/images/${providerId}/${file}`,
-        provider: providerId,
-        providerName: providerMap[providerId]
-      });
-    });
-  });
-
-  res.json(allGames);
+// Default route
+app.get('/', (req, res) => {
+  res.send({ message: 'Game Gallery API is running!' });
 });
 
-// GET stats summary
-router.get('/stats/summary', (req, res) => {
-  let totalGames = 0;
-  Object.keys(providerMap).forEach(providerId => {
-    const folderPath = path.join(imagesBase, providerId);
-    if (!fs.existsSync(folderPath)) return;
-    const count = fs.readdirSync(folderPath).filter(f => /\.(png|jpg|jpeg|gif)$/i.test(f)).length;
-    totalGames += count;
-  });
-
-  res.json({ totalGames });
+app.listen(port, () => {
+  console.log(`Server running on port ${port}`);
 });
-
-module.exports = router;
