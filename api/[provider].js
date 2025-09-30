@@ -8,7 +8,7 @@ export default async function handler(req, res) {
 
         // Daftar semua provider
         const validProviders = [
-            'pragmatic-play', 'pgsoft', 'habanero', 'jili',
+            'pragmatic', 'pgsoft', 'habanero', 'jili',
             'spadegaming', 'jokergaming', 'microgaming', 'hacksaw',
             'fastspin', 'nolimitcity', 'advantplay', 'playstar',
             'live22', 'cq9', 'sboslot', '5g'
