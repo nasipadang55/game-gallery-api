@@ -1,32 +1,53 @@
 const express = require('express');
-const cors = require('cors');
+const fs = require('fs');
+const path = require('path');
+const router = express.Router();
 
-const app = express();
-const port = process.env.PORT || 5000;
+const imagesBase = path.join(__dirname, '../images');
 
-// === Middleware ===
-app.use(cors());
-app.use(express.json());
+// Mapping folder -> provider name
+const providerMap = {
+  pragmatic: 'Pragmatic Play',
+  pgsoft: 'PG Soft',
+  habanero: 'Habanero',
+  spadegaming: 'Spadegaming'
+};
 
-// === Provider routes ===
-const pragmatic = require('./api/pragmatic');
-const pgsoft = require('./api/pgsoft');
-const habanero = require('./api/habanero');
-const spadegaming = require('./api/spadegaming');
-const 5g = require('./api/5g');
+// GET all games across providers
+router.get('/', (req, res) => {
+  const allGames = [];
 
-app.use('/api/pragmatic', pragmatic);
-app.use('/api/pgsoft', pgsoft);
-app.use('/api/habanero', habanero);
-app.use('/api/spadegaming', spadegaming);
-app.use('/api/5g', 5g);
+  Object.keys(providerMap).forEach(providerId => {
+    const folderPath = path.join(imagesBase, providerId);
+    if (!fs.existsSync(folderPath)) return;
 
+    const files = fs.readdirSync(folderPath).filter(f => /\.(png|jpg|jpeg|gif)$/i.test(f));
 
-// Default route
-app.get('/', (req, res) => {
-  res.send({ message: 'Game Gallery API is running!' });
+    files.forEach((file, index) => {
+      allGames.push({
+        id: `${providerId}${index+1}`,
+        title: file.replace(/\.(png|jpg|jpeg|gif)$/i, '').replace(/[-_]/g, ' '),
+        imageUrl: `/images/${providerId}/${file}`,
+        provider: providerId,
+        providerName: providerMap[providerId]
+      });
+    });
+  });
+
+  res.json(allGames);
 });
 
-app.listen(port, () => {
-  console.log(`Server running on port ${port}`);
+// GET stats summary
+router.get('/stats/summary', (req, res) => {
+  let totalGames = 0;
+  Object.keys(providerMap).forEach(providerId => {
+    const folderPath = path.join(imagesBase, providerId);
+    if (!fs.existsSync(folderPath)) return;
+    const count = fs.readdirSync(folderPath).filter(f => /\.(png|jpg|jpeg|gif)$/i.test(f)).length;
+    totalGames += count;
+  });
+
+  res.json({ totalGames });
 });
+
+module.exports = router;
