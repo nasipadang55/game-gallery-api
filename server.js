@@ -13,11 +13,14 @@ const pragmatic = require('./api/pragmatic');
 const pgsoft = require('./api/pgsoft');
 const habanero = require('./api/habanero');
 const spadegaming = require('./api/spadegaming');
+const 5g = require('./api/5g');
 
 app.use('/api/pragmatic', pragmatic);
 app.use('/api/pgsoft', pgsoft);
 app.use('/api/habanero', habanero);
 app.use('/api/spadegaming', spadegaming);
+app.use('/api/5g', 5g);
+
 
 // Default route
 app.get('/', (req, res) => {
