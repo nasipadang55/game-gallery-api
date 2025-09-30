@@ -27,7 +27,7 @@ module.exports = async function handler(req, res) {
     }
 
     // URL index.json di Namecheap
-    const baseUrl = `https://sansserif.cloud/image/${provider}/`;
+    const baseUrl = `https://game-gallery-api.vercel.app/image/${provider}/`;
     const jsonUrl = `${baseUrl}index.json`;
 
     // Fetch file JSON
