@@ -19,6 +19,9 @@
       "src": "/api/(.*)",
       "dest": "/api/$1.js"
     },
+      "src": "/api/images/(.*)",
+      "dest": "/api/images/$1"
+    },
     {
       "src": "/(.*)",
       "dest": "/index.html"
