@@ -3,22 +3,23 @@ const path = require('path');
 
 module.exports = (req, res) => {
   try {
-    // Path ke folder public/images/5g
     const imagesFolder = path.join(process.cwd(), 'public/images/5g');
     const files = fs.readdirSync(imagesFolder);
 
-    // Filter file gambar saja
     const imageFiles = files.filter(file => {
       const ext = path.extname(file).toLowerCase();
       return ['.png', '.jpg', '.jpeg', '.gif', '.webp'].includes(ext);
     });
 
-    // Buat data JSON
     const data = imageFiles.map(file => ({
       id: path.parse(file).name,
       title: path.parse(file).name,
-      imageUrl: `/images/5g/${file}` // Bisa langsung diakses oleh browser
+      imageUrl: `/images/5g/${file}`
     }));
+
+    // Menulis file JSON fisik
+    const outputPath = path.join(process.cwd(), 'public/images/images.json');
+    fs.writeFileSync(outputPath, JSON.stringify(data, null, 2));
 
     res.setHeader('Access-Control-Allow-Origin', '*');
     res.json(data);
