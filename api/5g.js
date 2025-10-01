@@ -3,9 +3,8 @@ const path = require('path');
 
 module.exports = (req, res) => {
   try {
-    // Path ke folder gambar di public
-    const imagesFolder = path.join(process.cwd(), 'public/images/5g');
-    const files = fs.readdirSync(imagesFolder).filter(f => /\.(png|jpg|jpeg|gif)$/.test(f));
+    const imagesFolder = path.join(__dirname, 'images/5g');
+    const files = fs.readdirSync(imagesFolder);
 
     const data = files.map(file => ({
       id: path.parse(file).name,
