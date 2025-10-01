@@ -4,7 +4,7 @@ const path = require('path');
 module.exports = (req, res) => {
   try {
     // Path ke folder public/images/5g
-    const imagesFolder = path.join(process.cwd(), '/images/5g');
+    const imagesFolder = path.join(process.cwd(), 'public/images/5g');
     const files = fs.readdirSync(imagesFolder);
 
     // Filter file gambar saja
