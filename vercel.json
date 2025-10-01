@@ -11,6 +11,6 @@
     {
       "src": "/images/(.*)",
       "dest": "/images/$1"
-    },
+    }
   ]
 }
