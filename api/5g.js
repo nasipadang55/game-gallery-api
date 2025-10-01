@@ -6,7 +6,13 @@ module.exports = (req, res) => {
     const imagesFolder = path.join(__dirname, 'images/5g');
     const files = fs.readdirSync(imagesFolder);
 
-    const data = files.map(file => ({
+    // Filter file yang berformat gambar
+    const imageExtensions = ['.png', '.webp', '.jpg', '.jpeg', '.gif'];
+    const imageFiles = files.filter(file => 
+      imageExtensions.includes(path.extname(file).toLowerCase())
+    );
+
+    const data = imageFiles.map(file => ({
       id: path.parse(file).name,
       title: path.parse(file).name,
       imageUrl: `/images/5g/${file}`
