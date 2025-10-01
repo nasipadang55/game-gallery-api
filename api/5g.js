@@ -3,7 +3,7 @@ const path = require('path');
 
 module.exports = (req, res) => {
   try {
-    const imagesFolder = path.join(process.cwd(), 'https://sansserif.cloud/images/5g/');
+    const imagesFolder = path.join(process.cwd(), 'public/images/5g/');
     const files = fs.readdirSync(imagesFolder);
 
     const imageExtensions = ['.png', '.webp', '.jpg', '.jpeg', '.gif'];
