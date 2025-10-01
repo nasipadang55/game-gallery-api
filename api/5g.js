@@ -3,26 +3,27 @@ const path = require('path');
 
 module.exports = (req, res) => {
   try {
+    // Path ke folder gambar di public
     const imagesFolder = path.join(process.cwd(), 'public/images/5g');
-    const files = fs.readdirSync(imagesFolder);
+    
+    // Filter file gambar saja
+    const files = fs.readdirSync(imagesFolder).filter(file => /\.(png|jpg|jpeg|gif)$/.test(file));
 
-    const imageFiles = files.filter(file => {
-      const ext = path.extname(file).toLowerCase();
-      return ['.png', '.jpg', '.jpeg', '.gif', '.webp'].includes(ext);
-    });
-
-    const data = imageFiles.map(file => ({
+    // Buat array JSON
+    const data = files.map(file => ({
       id: path.parse(file).name,
       title: path.parse(file).name,
-      imageUrl: `/images/5g/${file}`
+      imageUrl: `/images/5g/${file}` // URL publik
     }));
 
-    // Menulis file JSON fisik
-    const outputPath = path.join(process.cwd(), 'public/images/images.json');
-    fs.writeFileSync(outputPath, JSON.stringify(data, null, 2));
+    // Optional: update file JSON otomatis
+    fs.writeFileSync(path.join(process.cwd(), 'data/5g.json'), JSON.stringify(data, null, 2));
 
+    // Header CORS
     res.setHeader('Access-Control-Allow-Origin', '*');
-    res.json(data);
+    
+    // Kirim response
+    res.status(200).json(data);
   } catch (err) {
     console.error(err);
     res.status(500).json({ error: 'Internal Server Error' });
