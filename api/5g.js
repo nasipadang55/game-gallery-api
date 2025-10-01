@@ -2,20 +2,17 @@ const fs = require('fs');
 const path = require('path');
 
 module.exports = (req, res) => {
-  try {
-    const imagesFolder = path.join(__dirname, 'public/images/5g');
-    const files = fs.readdirSync(imagesFolder);
+  const file = req.url.replace('/api/images/5g/', '');
+  const filePath = path.join(__dirname, 'images/5g', file);
 
-    const data = files.map(file => ({
-      id: path.parse(file).name,
-      title: path.parse(file).name,
-      imageUrl: `/images/5g/${file}`
-    }));
-
-    res.setHeader('Access-Control-Allow-Origin', '*');
-    res.json(data);
-  } catch (err) {
-    console.error(err);
-    res.status(500).json({ error: 'Internal Server Error' });
+  if (!fs.existsSync(filePath)) {
+    res.status(404).send('Not found');
+    return;
   }
+
+  const ext = path.extname(filePath).toLowerCase();
+  const mimeTypes = { '.png':'image/png', '.jpg':'image/jpeg', '.jpeg':'image/jpeg', '.gif':'image/gif' };
+
+  res.setHeader('Content-Type', mimeTypes[ext] || 'application/octet-stream');
+  fs.createReadStream(filePath).pipe(res);
 };
