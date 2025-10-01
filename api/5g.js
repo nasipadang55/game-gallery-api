@@ -3,13 +3,13 @@ const path = require('path');
 
 module.exports = (req, res) => {
   try {
-    const imagesFolder = path.join(__dirname, 'images/5g');
+    const imagesFolder = path.join(__dirname, 'public/images/5g');
     const files = fs.readdirSync(imagesFolder);
 
     const data = files.map(file => ({
       id: path.parse(file).name,
       title: path.parse(file).name,
-      imageUrl: `/api/images/5g/${file}`
+      imageUrl: `/images/5g/${file}`
     }));
 
     res.setHeader('Access-Control-Allow-Origin', '*');
