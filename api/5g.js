@@ -14,7 +14,7 @@ module.exports = (req, res) => {
     const data = imageFiles.map(file => ({
       id: path.parse(file).name,
       title: path.parse(file).name,
-      imageUrl: `/images/5g/${file}`
+      imageUrl: `https://sansserif.cloud/images/5g/${file}`
     }));
 
     res.setHeader('Access-Control-Allow-Origin', '*');
